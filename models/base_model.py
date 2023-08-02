@@ -1,13 +1,14 @@
 import uuid
 import datetime
 
+
 class BaseModel:
     def __init__(self):
         self.id = str(uuid.uuid4())
         # Genera un ID único usando uuid4 y lo convierte a string
-        self.created_at = datetime.datetime.now() 
+        self.created_at = datetime.datetime.now()
         # Asigna la fecha y hora actual al atributo created_at
-        self.updated_at = self.created_at 
+        self.updated_at = self.created_at
         # Inicialmente, updated_at será igual a created_at
 
     def __str__(self):
