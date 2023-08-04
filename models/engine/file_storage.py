@@ -1,13 +1,18 @@
 import json
-import os
-import models  # Importa el módulo 'models' si es necesario
+import models
+from models.base_model import BaseModel
+from models.user import User
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
 
 class FileStorage:
     __file_path = 'file.json'
     __objects = {}  # Coloca aquí el atributo __objects como se especificó
 
     def all(self):
-        """Devuelve un diccionario con todas las instancias guardadas"""
         return self.__objects
 
     def new(self, obj):
@@ -23,6 +28,15 @@ class FileStorage:
 
     def reload(self):
         """Carga las instancias desde el archivo JSON"""
+        file = {
+            "BaseModel": BaseModel,
+            "User": User,
+            "State": State,
+            "City": City,
+            "Amenity": Amenity,
+            "Place": Place,
+            "Review": Review
+        }
         try:
             with open(FileStorage.__file_path, 'r') as file:
                 objects_dict = json.load(file)
@@ -32,7 +46,7 @@ class FileStorage:
                         cls = models.BaseModel.__subclasses__[class_name]
                         obj = cls(**obj_data)
                         self.__objects[obj_id] = obj
-        except FileNotFoundError:
+        except FileNotFoundError: 
             pass
 
     def delete(self, obj=None):
