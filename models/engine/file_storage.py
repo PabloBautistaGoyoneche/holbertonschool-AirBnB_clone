@@ -42,8 +42,8 @@ class FileStorage:
                 objects_dict = json.load(file)
                 for obj_id, obj_data in objects_dict.items():
                     class_name = obj_data.pop('__class__', None)
-                    if class_name and class_name in models.BaseModel.__subclasses__():
-                        cls = models.BaseModel.__subclasses__[class_name]
+                    if class_name and class_name in BaseModel.__subclasses__():
+                        cls = BaseModel.__subclasses__[class_name]
                         obj = cls(**obj_data)
                         self.__objects[obj_id] = obj
         except FileNotFoundError: 
