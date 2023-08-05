@@ -1,6 +1,6 @@
 import uuid
 import datetime
-from models import storage  # Se importa el módulo 'storage'
+from models.engine import file_storage  # Se importa el módulo 'storage'
 
 class BaseModel:
     def __init__(self, *args, **kwargs):
@@ -15,12 +15,12 @@ class BaseModel:
             self.id = str(uuid.uuid4())
             self.created_at = datetime.datetime.now()
             self.updated_at = self.created_at
-            storage.new(self)  # Llamada al método new(self) en storage para instancias nuevas
+            file_storage.new(self)  # Llamada al método new(self) en storage para instancias nuevas
 
     def save(self):
         """Actualiza el atributo updated_at con la fecha y hora actual"""
         self.updated_at = datetime.datetime.now()
-        storage.save()  # Llamada al método save(self) de storage
+        file_storage.save()  # Llamada al método save(self) de storage
 
     def to_dict(self):
         """Convierte los atributos de la clase en un diccionario"""
