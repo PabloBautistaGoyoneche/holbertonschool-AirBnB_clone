@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 from models.base_model import BaseModel
-# Module for class Place
 
+""" Module for class Place """
 class Place(BaseModel):
     city_id = ""
     user_id = ""

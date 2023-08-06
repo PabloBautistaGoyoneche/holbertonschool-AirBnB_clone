@@ -1,7 +1,6 @@
 #!/usr/bin/python3
-
-# Module Amenity class
 from models.base_model import BaseModel
 
+""" Module Amenity class """
 class Amenity(BaseModel):
     name = ""
