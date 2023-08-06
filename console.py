@@ -19,10 +19,10 @@ class HBNBCommand(cmd.Cmd):
     prompt = '(hbnb) '
     completekey = None
 
-    """
+    
     def _init_(self): 
-    super()._init_()
-    """
+        super()._init_()
+
 
 
     def emptyline(self):
