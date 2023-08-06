@@ -1,6 +1,12 @@
 import json
 import os
 from models.base_model import BaseModel
+from models.user import User
+from models.state import State
+from models.review import Review
+from models.place import Place
+from models.city import City
+from models.amenity import Amenity
 
 class FileStorage:
     __file_path = 'file.json'
@@ -25,7 +31,15 @@ class FileStorage:
 
     def reload(self):
         """ Load the instances from the JSON file """
-        classes = {"BaseModel": BaseModel}
+        classes = {
+            "BaseModel": BaseModel,
+            "User": User,
+            "User": State,
+            "User": Review,
+            "User": Place,
+            "User": City,
+            "User": Amenity
+        }
         try:
             with open(self.__file_path, 'r') as f:
                 data = f.read()

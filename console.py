@@ -5,29 +5,33 @@
 import cmd
 from models.base_model import BaseModel
 from models.engine.file_storage import FileStorage
+from models.user import User
+from models.state import State
+from models.review import Review
+from models.place import Place
+from models.city import City
+from models.amenity import Amenity
 
 
 class HBNBCommand(cmd.Cmd):
 
     """Interpreter class from cmd"""
+
+    def emptyline(self):
+        """Overrides parent empty line method"""
+    pass
+    
     prompt = '(hbnb): '
 
-    classes_list = ["BaseModel"]
+    classes_list = ["BaseModel", "User", "State", "City",
+                    "Amenity", "Place", "Review"]
+    
     int_attrs = ["attribute1", "attribute2"]
     float_attrs = ["attribute3", "attribute4"]
 
     prompt = '(hbnb) '
     completekey = None
 
-    
-    def _init_(self): 
-        super()._init_()
-
-
-
-    def emptyline(self):
-        """Overrides parent empty line method"""
-        pass
 #########################################################################################
     # EOF
     def do_EOF(self, line):
