@@ -2,5 +2,7 @@
 from models.base_model import BaseModel
 
 """ Module Amenity class """
+
+
 class Amenity(BaseModel):
     name = ""

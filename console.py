@@ -19,9 +19,9 @@ class HBNBCommand(cmd.Cmd):
 
     def emptyline(self):
         """Overrides parent empty line method"""
-    pass
+        pass
 
-    prompt = '(hbnb): '
+    prompt = '(hbnb)'
 
     classes_list = ["BaseModel", "User", "State", "City",
                     "Amenity", "Place", "Review"]

@@ -2,6 +2,8 @@
 from models.base_model import BaseModel
 
 """ Module Review class"""
+
+
 class Review(BaseModel):
     place_id = ""
     user_id = ""
