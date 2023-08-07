@@ -20,33 +20,34 @@ class HBNBCommand(cmd.Cmd):
     def emptyline(self):
         """Overrides parent empty line method"""
     pass
-    
+
     prompt = '(hbnb): '
 
     classes_list = ["BaseModel", "User", "State", "City",
                     "Amenity", "Place", "Review"]
-    
+
     int_attrs = ["attribute1", "attribute2"]
     float_attrs = ["attribute3", "attribute4"]
 
     prompt = '(hbnb) '
     completekey = None
 
-#########################################################################################
-    # EOF
+    def _init_(self):
+        super()._init_()
+
+    def emptyline(self):
+        """Overrides parent empty line method"""
+        pass
+
     def do_EOF(self, line):
         """Quits the console when Ctrl D entered"""
         print()
         return True
 
-#########################################################################################
-    # quit
     def do_quit(self, line):
         """Quit command to exit the program"""
         return True
 
-#########################################################################################
-    # create
     def do_create(self, line):
         """Creates a new instance of a specified class and prints
         nstance's unique id"""
@@ -64,8 +65,6 @@ class HBNBCommand(cmd.Cmd):
         new_obj.save()
         print(new_obj.id)
 
-#########################################################################################
-    # show
     def do_show(self, line):
         """Prints the string repr of an instance based
         on class name and id"""
@@ -93,8 +92,6 @@ class HBNBCommand(cmd.Cmd):
                 return
         print("** no instance found **")
 
-#########################################################################################
-    # destroy
     def do_destroy(self, line):
         """Deletes an instance of a class based on class name and id"""
         if not line:
@@ -120,8 +117,6 @@ class HBNBCommand(cmd.Cmd):
                 return
         print("** no instance found **")
 
-#########################################################################################
-    # all
     def do_all(self, line):
         """Prints, as a list of strings, or all instances of a certain
         class, if provided"""
@@ -149,12 +144,10 @@ class HBNBCommand(cmd.Cmd):
                 else:
                     print("** class doesn't exist **")
 
-#########################################################################################
-    # update
     def do_update(self, line):
 
-        """ Updates or adds an attribute to an instance of a class. 
-        The instance is identified by the class name and the id. 
+        """ Updates or adds an attribute to an instance of a class.
+        The instance is identified by the class name and the id.
         You can only update one attribute and one value per call """
 
         if not line:
@@ -201,8 +194,6 @@ class HBNBCommand(cmd.Cmd):
 
         instance_found.save()
 
-#########################################################################################
-    # help
     def do_help(self, line):
         print("\n")
         print("Comandos documentados (escribe 'help <comando>'):")
@@ -210,6 +201,6 @@ class HBNBCommand(cmd.Cmd):
         print("EOF  help  quit  create  show  destroy  all  update")
         print("\n")
 
+
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
-
