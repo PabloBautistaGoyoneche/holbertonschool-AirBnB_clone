@@ -19,7 +19,7 @@ class HBNBCommand(cmd.Cmd):
 
     def emptyline(self):
         """Overrides parent empty line method"""
-    pass
+        pass
 
     prompt = '(hbnb)'
 
