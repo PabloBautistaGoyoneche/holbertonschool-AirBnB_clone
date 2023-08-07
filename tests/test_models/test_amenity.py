@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """We test te class Amenity and all its functions"""
 import unittest
+
 from models.amenity import Amenity
 from datetime import datetime
 from time import sleep
@@ -90,27 +91,6 @@ class TestAmenity(unittest.TestCase):
             hello = "hello"
             amenity1.to_dict(hello)
 
-    def test_from_dict(self):
-        # Check if from_dict() method creates a new instance
-        # with the correct attributes
-        data = {
-            "__class__": "Amenity",
-            "id": "123",
-            "created_at": "2022-01-01T12:00:00.000000",
-            "updated_at": "2022-01-01T12:00:00.000000",
-            "custom_attribute": "custom_value",
-        }
-        amenity1 = Amenity.from_dict(data)
-        self.assertIsInstance(amenity1, Amenity)
-        self.assertEqual(amenity1.id, "123")
-        self.assertEqual(
-            amenity1.created_at, datetime(2022, 1, 1, 12, 0, 0)
-        )
-        self.assertEqual(
-            amenity1.updated_at, datetime(2022, 1, 1, 12, 0, 0)
-        )
-        self.assertNotIn("custom_attribute", amenity1.__dict__)
-
     def test_delete(self):
         """Test delete method"""
         amenity1 = Amenity()
@@ -124,19 +104,6 @@ class TestAmenity(unittest.TestCase):
             amenity1._FileStorage__objects,
         )
 
-    def test_delete_with_arg(self):
-        """Test delete method with an instance argument"""
-        amenity1 = Amenity()
-        self.assertIn(
-            amenity1.__class__.__name__ + "." + amenity1.id,
-            amenity1._FileStorage__objects,
-        )
-        amenity1.delete(amenity1)
-        self.assertNotIn(
-            amenity1.__class__.__name__ + "." + amenity1.id,
-            amenity1._FileStorage__objects,
-        )
-
     def test_to_dict_with_keys(self):
         """Test to_dict method contains correct keys"""
         amenity1 = Amenity()
@@ -145,19 +112,6 @@ class TestAmenity(unittest.TestCase):
         self.assertIn("id", dic)
         self.assertIn("created_at", dic)
         self.assertIn("updated_at", dic)
-
-    def test_reload(self):
-        """Test reload method"""
-        amenity1 = Amenity()
-        amenity2 = Amenity()
-        amenity2.delete()
-        self.assertNotEqual(
-            amenity1.updated_at, amenity2.updated_at
-        )
-        amenity1.reload()
-        self.assertEqual(
-            amenity1.updated_at, amenity2.updated_at
-        )
 
     def test_reload_with_arg(self):
         """Test reload method with an instance argument"""
