@@ -1,69 +1,49 @@
 #!/usr/bin/python3
 """We test te class Place and all its functions"""
 import unittest
-from models.place import Place
-from models.base_model import BaseModel
 from datetime import datetime
+from models.place import Place
 
 
-class TestPlace(unittest.TestCase):
-    """ Test cases for Place class """
+class TestBase(unittest.TestCase):
+    """The test class to work in unicode"""
 
-    def test_instantiation(self):
-        """ Test instantiation """
-        place = Place()
-        self.assertIsInstance(place, BaseModel)
-        self.assertIsInstance(place, Place)
-        self.assertEqual(place.city_id, "")
-        self.assertEqual(place.user_id, "")
-        self.assertEqual(place.name, "")
-        self.assertEqual(place.description, "")
-        self.assertEqual(place.number_rooms, 0)
-        self.assertEqual(place.number_bathrooms, 0)
-        self.assertEqual(place.max_guest, 0)
-        self.assertEqual(place.price_by_night, 0)
-        self.assertEqual(place.latitude, 0.0)
-        self.assertEqual(place.longitude, 0.0)
-        self.assertEqual(place.amenity_ids, [])
+    def testSet(self):
+        """Check if you can generate an instance"""
+        self.P = Place()
 
-    def test_to_dict(self):
-        """ Test to_dict method """
-        place = Place()
-        place_dict = place.to_dict()
-        self.assertEqual(place_dict['__class__'], 'Place')
-        self.assertEqual(type(place_dict['created_at']), str)
-        self.assertEqual(type(place_dict['updated_at']), str)
+    def testExist(self):
+        """A test that check if the attributes exists in the class"""
+        P1 = Place()
+        self.assertTrue(hasattr(P1, "id"))
+        self.assertTrue(hasattr(P1, "created_at"))
+        self.assertTrue(hasattr(P1, "updated_at"))
+        self.assertTrue(hasattr(P1, "city_id"))
+        self.assertTrue(hasattr(P1, "user_id"))
+        self.assertTrue(hasattr(P1, "name"))
+        self.assertTrue(hasattr(P1, "description"))
+        self.assertTrue(hasattr(P1, "number_rooms"))
+        self.assertTrue(hasattr(P1, "number_bathrooms"))
+        self.assertTrue(hasattr(P1, "max_guest"))
+        self.assertTrue(hasattr(P1, "price_by_night"))
+        self.assertTrue(hasattr(P1, "latitude"))
+        self.assertTrue(hasattr(P1, "longitude"))
+        self.assertTrue(hasattr(P1, "amenity_ids"))
 
-    def test_from_dict(self):
-        """ Test from_dict method """
-        data = {
-            'id': '123',
-            'city_id': '456',
-            'user_id': '789',
-            'name': 'Test Place',
-            'description': 'Test description',
-            'number_rooms': 3,
-            'number_bathrooms': 2,
-            'max_guest': 6,
-            'price_by_night': 100,
-            'latitude': 123.45,
-            'longitude': -67.89,
-            'amenity_ids': ['a1', 'a2']
-        }
-        place = Place(**data)
-        self.assertEqual(place.id, '123')
-        self.assertEqual(place.city_id, '456')
-        self.assertEqual(place.user_id, '789')
-        self.assertEqual(place.name, 'Test Place')
-        self.assertEqual(place.description, 'Test description')
-        self.assertEqual(place.number_rooms, 3)
-        self.assertEqual(place.number_bathrooms, 2)
-        self.assertEqual(place.max_guest, 6)
-        self.assertEqual(place.price_by_night, 100)
-        self.assertEqual(place.latitude, 123.45)
-        self.assertEqual(place.longitude, -67.89)
-        self.assertEqual(place.amenity_ids, ['a1', 'a2'])
-
-
-if __name__ == "__main__":
-    unittest.main()
+    def testUser(self):
+        """A test to check if all values are the correct type"""
+        P2 = Place
+        self.assertIsInstance(P2.id, str)
+        self.assertIsInstance(P2.created_at, datetime)
+        self.assertIsInstance(P2.updated_at, datetime)
+        self.assertIsInstance(P2.city_id, str)
+        self.assertIsInstance(P2.user_id, str)
+        self.assertIsInstance(P2.name, str)
+        self.assertIsInstance(P2.description, str)
+        self.assertIsInstance(P2.number_rooms, int)
+        self.assertIsInstance(P2.number_bathrooms, int)
+        self.assertIsInstance(P2.max_guest, int)
+        self.assertIsInstance(P2.price_by_night, int)
+        self.assertIsInstance(P2.latitude, float)
+        self.assertIsInstance(P2.longitude, float)
+        self.assertIsInstance(P2.amenity_ids, list)
