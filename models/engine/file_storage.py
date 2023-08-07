@@ -8,13 +8,14 @@ from models.place import Place
 from models.city import City
 from models.amenity import Amenity
 
+
 class FileStorage:
     __file_path = 'file.json'
-    __objects = {} 
+    __objects = {}
 
     def all(self):
         return self.__objects
-    
+
     def new(self, obj):
         """ Add a new instance to the __objects dictionary """
         if obj:
@@ -49,13 +50,15 @@ class FileStorage:
         except FileNotFoundError:
             pass
 
-    def delete (self, obj=None):
+    def delete(self, obj=None):
         """ Removes an object from __objects if it is present """
         if obj:
             key = f"{obj.__class__.__name__}.{obj.id}"
-            self.__objects.pop(key, None) 
+            self.__objects.pop(key, None)
 
     def close(self):
-        """ Call the save() method to save the changes before terminating the program. """
+        """
+        Call the save() method to save the
+        changes before terminating the program.
+        """
         self.save()
-

@@ -2,5 +2,7 @@
 from models.base_model import BaseModel
 
 """State class"""
+
+
 class State(BaseModel):
     name = ""
