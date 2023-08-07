@@ -21,7 +21,7 @@ class HBNBCommand(cmd.Cmd):
         """Overrides parent empty line method"""
         pass
 
-    prompt = '(hbnb)'
+    prompt = '(hbnb) '
 
     classes_list = ["BaseModel", "User", "State", "City",
                     "Amenity", "Place", "Review"]
@@ -31,13 +31,6 @@ class HBNBCommand(cmd.Cmd):
 
     prompt = '(hbnb) '
     completekey = None
-
-    def _init_(self):
-        super()._init_()
-
-    def emptyline(self):
-        """Overrides parent empty line method"""
-        pass
 
     def do_EOF(self, line):
         """Quits the console when Ctrl D entered"""
