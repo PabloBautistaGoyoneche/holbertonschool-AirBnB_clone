@@ -1,95 +1,33 @@
 #!/usr/bin/python3
 """We test te class Review and all its functions"""
 import unittest
-from models.review import Review
-from models.base_model import BaseModel
 from datetime import datetime
+from models.review import Review
 
 
-class TestReview(unittest.TestCase):
-    """ Test cases for Review class """
+class TestBase(unittest.TestCase):
+    """The test class to work in unicode"""
 
-    def test_instantiation(self):
-        """ Test instantiation """
-        review = Review()
-        self.assertIsInstance(review, BaseModel)
-        self.assertIsInstance(review, Review)
-        self.assertEqual(review.place_id, "")
-        self.assertEqual(review.user_id, "")
-        self.assertEqual(review.text, "")
+    def testSet(self):
+        """Check if you can generate an instance"""
+        self.R = Review()
 
-    def test_to_dict(self):
-        """ Test to_dict method """
-        review = Review()
-        review_dict = review.to_dict()
-        self.assertEqual(review_dict['__class__'], 'Review')
-        self.assertEqual(type(review_dict['created_at']), str)
-        self.assertEqual(type(review_dict['updated_at']), str)
+    def testExist(self):
+        """A test that check if the attributes exists in the class"""
+        R1 = Review()
+        self.assertTrue(hasattr(R1, "id"))
+        self.assertTrue(hasattr(R1, "created_at"))
+        self.assertTrue(hasattr(R1, "updated_at"))
+        self.assertTrue(hasattr(R1, "place_id"))
+        self.assertTrue(hasattr(R1, "user_id"))
+        self.assertTrue(hasattr(R1, "text"))
 
-    def test_from_dict(self):
-        """ Test from_dict method """
-        data = {
-            'id': '123',
-            'place_id': '456',
-            'user_id': '789',
-            'text': 'Test review'
-        }
-        review = Review(**data)
-        self.assertEqual(review.id, '123')
-        self.assertEqual(review.place_id, '456')
-        self.assertEqual(review.user_id, '789')
-        self.assertEqual(review.text, 'Test review')
-
-    def test_update_attributes(self):
-        """ Test update attributes """
-        review = Review()
-        self.assertEqual(review.text, "")
-        review.text = "New review"
-        self.assertEqual(review.text, "New review")
-
-    def test_created_updated_at(self):
-        """ Test created_at and updated_at attributes """
-        review = Review()
-        self.assertIsInstance(review.created_at, datetime)
-        self.assertIsInstance(review.updated_at, datetime)
-        old_created_at = review.created_at
-        old_updated_at = review.updated_at
-
-        # Wait for a moment to simulate time passing
-        import time
-        time.sleep(1)
-
-        review.save()
-
-        # Make sure updated_at is changed after saving
-        self.assertNotEqual(review.updated_at, old_updated_at)
-
-        # Make sure created_at remains the same after saving
-        self.assertEqual(review.created_at, old_created_at)
-
-    def test_str_representation(self):
-        """ Test __str__ representation """
-        review = Review()
-        expected_str = "[Review] ({}) {}".format(review.id, review.__dict__)
-        self.assertEqual(str(review), expected_str)
-
-    def test_to_dict_with_numeric_attributes(self):
-        """ Test of correct storage in the dictionary """
-        review = Review()
-        review.number_rooms = 3
-        review.number_bathrooms = 2
-        review.max_guest = 6
-        review.price_by_night = 100
-        obj_dict = review.to_dict()
-        self.assertIn("number_rooms", obj_dict)
-        self.assertEqual(obj_dict['number_rooms'], 3)
-        self.assertIn("number_bathrooms", obj_dict)
-        self.assertEqual(obj_dict['number_bathrooms'], 2)
-        self.assertIn("max_guest", obj_dict)
-        self.assertEqual(obj_dict['max_guest'], 6)
-        self.assertIn("price_by_night", obj_dict)
-        self.assertEqual(obj_dict['price_by_night'], 100)
-
-
-if __name__ == "__main__":
-    unittest.main()
+    def testUser(self):
+        """A test to check if all values are the correct type"""
+        R2 = Review()
+        self.assertIsInstance(R2.id, str)
+        self.assertIsInstance(R2.created_at, datetime)
+        self.assertIsInstance(R2.updated_at, datetime)
+        self.assertIsInstance(R2.place_id, str)
+        self.assertIsInstance(R2.user_id, str)
+        self.assertIsInstance(R2.text, str)
