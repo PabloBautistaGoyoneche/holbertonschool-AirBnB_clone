@@ -1,75 +1,92 @@
 #!/usr/bin/python3
-"""We test te class Base Model and all its functions"""
+"""Unit tests for BaseModel"""
+
 import unittest
-from datetime import datetime
 from models.base_model import BaseModel
+from datetime import datetime
 
 
-class TestBase(unittest.TestCase):
-    """The test class to work in unicode"""
+class TestBaseModel(unittest.TestCase):
+    """Unit tests for BaseModel"""
 
-    def testSetUp(self):
-        """Check if you can generate an instance"""
-        self.B = BaseModel()
+    def test_instantiate(self):
+        """Pass instantiate"""
+        self.assertEqual(BaseModel, type(BaseModel()))
 
-    def testExist(self):
-        """A test that check if the attributes exists in the class"""
-        B5 = BaseModel()
-        self.assertTrue(hasattr(B5, "id"))
-        self.assertTrue(hasattr(B5, "created_at"))
-        self.assertTrue(hasattr(B5, "updated_at"))
+    def test_id(self):
+        """Pass public id string format"""
+        self.assertEqual(str, type(BaseModel().id))
 
-    def testBase(self):
-        """A test to check if all values are the correct type"""
-        B1 = BaseModel()
-        self.assertIsInstance(B1.id, str)
-        self.assertIsInstance(B1.created_at, datetime)
-        self.assertIsInstance(B1.updated_at, datetime)
+    def test_created_at(self):
+        """Pass created at datetime"""
+        self.assertEqual(datetime, type(BaseModel().created_at))
 
-    def testSave(self):
-        """a test to check if the save function changes the
-        value of update_at"""
-        B2 = BaseModel()
-        prevUp = B2.updated_at
-        B2.save()
-        self.assertNotEquals(prevUp, B2.updated_at)
+    def test_updated_at(self):
+        """Pass updated at datetime"""
+        self.assertEqual(datetime, type(BaseModel().updated_at))
 
-    def testToDict(self):
-        """a test that check if to dict function work correctly"""
-        B3 = BaseModel()
-        keys = ['id', 'created_at', 'updated_at', '__class__']
-        b3_dict = B3.to_dict()
-        for key in keys:
-            self.assertIn(key, b3_dict)
+    def test_uid(self):
+        """UID created at each instantiation"""
+        base1 = BaseModel()
+        base2 = BaseModel()
+        self.assertNotEqual(base1.id, base2.id)
 
-    def test_to_dict_returns(self):
-        """a test to check if a dictionary is returned"""
-        B3 = BaseModel()
-        instance_dict = B3.to_dict()
+    def test_instantiate_attrs(self):
+        """Single instantiate and check attributes"""
+        base1 = BaseModel()
+        self.assertEqual(type(base1.id), str)
+        self.assertEqual(type(base1.created_at), datetime)
+        self.assertEqual(type(base1.updated_at), datetime)
 
-    def test_to_dict_attributes(self):
-        """chcckes if args in dictionary are expected"""
-        B3 = BaseModel()
-        instances_dicts = B3.to_dict()
-        self.assertIn('id', instances_dicts)
-        self.assertIn('created_at', instances_dicts)
-        self.assertIn('updated_at', instances_dicts)
+    def test_instantiate_kwargs(self):
+        """Single instantiate with kwargs"""
+        dt = datetime.today()
+        base1 = BaseModel(
+            id="123",
+            created_at=dt.isoformat(),
+            updated_at=dt.isoformat()
+        )
+        self.assertEqual(base1.id, "123")
+        self.assertEqual(base1.created_at, dt)
+        self.assertEqual(base1.updated_at, dt)
 
-    def testTodictFormat(self):
-        """a test for the isoformat values"""
-        B4 = BaseModel()
-        b4_dict = B4.to_dict()
-        created_at = datetime.fromisoformat(b4_dict['created_at'])
-        updated_at = datetime.fromisoformat(b4_dict['updated_at'])
-        self.assertIsInstance(created_at, datetime)
-        self.assertIsInstance(updated_at, datetime)
+    def test_str(self):
+        """___str__ method is string"""
+        base1 = BaseModel()
+        self.assertEqual(type(str(base1)), str)
 
-    def testStr(self):
-        B6 = BaseModel
-        pr = str(B6)
-        self.assertIn(self.__class__.__name__, pr)
-        self.assertIn(self.__class__.id)
+    def test_instantiate_arg(self):
+        """Invalid arg when instantiating"""
+        with self.assertRaises(NameError) as e:
+            b1 = BaseModel(hello)
+        self.assertEqual(str(e.exception), "name 'hello' is not defined")
+
+    def test_save(self):
+        """Save method"""
+        base1 = BaseModel()
+        update = base1.updated_at
+        base1.save()
+        self.assertNotEqual(update, base1.updated_at)
+
+    def test_to_dict(self):
+        """Pass to_dict method"""
+        base1 = BaseModel()
+        self.assertTrue(dict, type(base1.to_dict))
+
+    def test_to_dict_add_attr(self):
+        """Add attribute to dict"""
+        base1 = BaseModel()
+        base1.city = "LA"
+        base1.state = "California"
+        self.assertIn("city", base1.to_dict())
+        self.assertIn("state", base1.to_dict())
+
+    def test_to_dict_wrong_arg(self):
+        """Add an undefined arg"""
+        base1 = BaseModel()
+        with self.assertRaises(NameError):
+            base1.to_dict(hello)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
