@@ -1,29 +1,80 @@
 #!/usr/bin/python3
-"""We test te class State and all its functions"""
+"""
+Unittest to test state class
+"""
 import unittest
-from datetime import datetime
+import inspect
+import json
+import os
+import pycodestyle
+from models.base_model import BaseModel
 from models.state import State
 
 
-class TestBase(unittest.TestCase):
-    """The test class to work in unicode"""
+class TestFileStorageDocs(unittest.TestCase):
+    """Tests for documentation of class"""
 
-    def testSet(self):
-        """Check if you can generate an instance"""
-        self.S = State()
+    @classmethod
+    def setUpClass(cls):
+        """Set up for the doc tests"""
+        cls.state_funcs = inspect.getmembers(State, inspect.isfunction)
 
-    def testExist(self):
-        """A test that check if the attributes exists in the class"""
-        S1 = State()
-        self.assertTrue(hasattr(S1, "id"))
-        self.assertTrue(hasattr(S1, "created_at"))
-        self.assertTrue(hasattr(S1, "updated_at"))
-        self.assertTrue(hasattr(S1, "name"))
+    def test_conformance_class(self):
+        """Test that we conform to Pycodestyle."""
+        style = pycodestyle.StyleGuide(quiet=True)
+        result = style.check_files(['models/state.py'])
+        self.assertEqual(result.total_errors, 0,
+                         "Found code style errors (and warnings).")
 
-    def testUser(self):
-        """A test to check if all values are the correct type"""
-        S2 = State()
-        self.assertIsInstance(S2.id, str)
-        self.assertIsInstance(S2.created_at, datetime)
-        self.assertIsInstance(S2.updated_at, datetime)
-        self.assertIsInstance(S2.name, str)
+    def test_conformance_test(self):
+        """Test that we conform to Pycodestyle."""
+        style = pycodestyle.StyleGuide(quiet=True)
+        result = style.\
+            check_files(['tests/test_models/test_state.py'])
+        self.assertEqual(result.total_errors, 0,
+                         "Found code style errors (and warnings).")
+
+    def test_module_docstr(self):
+        """Tests for docstring"""
+        self.assertTrue(len(State.__doc__) >= 1)
+
+    def test_class_docstr(self):
+        """Tests for docstring"""
+        self.assertTrue(len(State.__doc__) >= 1)
+
+    def test_func_docstr(self):
+        """Tests for docstrings in all functions"""
+        for func in self.state_funcs:
+            self.assertTrue(len(func[1].__doc__) >= 1)
+
+
+class TestState(unittest.TestCase):
+
+    def test_is_subclass(self):
+        self.assertTrue(issubclass(State().__class__, BaseModel), True)
+
+    def test_attr_str(self):
+        self.assertEqual(type(State().name), str)
+
+    def test_has_attributes(self):
+        Victoria = State()
+        Victoria.name = "Victoria"
+        self.assertTrue('id' in Victoria.to_dict())
+        self.assertTrue('created_at' in Victoria.to_dict())
+        self.assertTrue('updated_at' in Victoria.to_dict())
+        self.assertTrue('name' in Victoria.to_dict())
+
+    def test_save(self):
+        Victoria = State()
+        Victoria.name = "Victoria"
+        Victoria.save()
+        self.assertNotEqual(Victoria.created_at, Victoria.updated_at)
+
+    def test_to_dict(self):
+        Victoria = State()
+        self.assertTrue(dict, type(Victoria.to_dict))
+        self.assertEqual('to_dict' in dir(Victoria), True)
+
+
+if __name__ == "__main__":
+    unittest.main()
