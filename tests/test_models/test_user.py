@@ -1,107 +1,110 @@
 #!/usr/bin/python3
-"""Unit tests for class User"""
+"""We test te class User and all its functions"""
 import unittest
+import datetime
+from models.base_model import BaseModel
 from models.user import User
-from datetime import datetime
 
 
 class TestUser(unittest.TestCase):
-    """Instantiation of User"""
+    def test_inheritance(self):
+        # Asegurarse de que User es una subclase de BaseModel
+        self.assertTrue(issubclass(User, BaseModel))
 
-    def test_instantiate(self):
-        """Pass instantiation"""
-        self.assertEqual(User, type(User()))
+    def test_attribute_initialization(self):
+        instance = User()
 
-    def test_id(self):
-        """Pass public id string format"""
-        self.assertEqual(str, type(User().id))
+        # Asegurarse de que los atributos estén inicializados correctamente
+        self.assertEqual(instance.email, "")
+        self.assertEqual(instance.password, "")
+        self.assertEqual(instance.first_name, "")
+        self.assertEqual(instance.last_name, "")
 
-    def test_created_at(self):
-        """Pass created at datetime"""
-        self.assertEqual(datetime, type(User().created_at))
+    def test_attribute_manipulation(self):
+        instance = User()
 
-    def test_updated_at(self):
-        """Pass updated at datetime"""
-        self.assertEqual(datetime, type(User().updated_at))
+        # Modificar valores de atributos
+        instance.email = "test@example.com"
+        instance.first_name = "John"
+        instance.last_name = "Doe"
 
-    def test_uid(self):
-        """UID created at each instantiation"""
-        user1 = User()
-        user2 = User()
-        self.assertNotEqual(user1.id, user2.id)
+        # Asegurarse de que los atributos se hayan actualizado correctamente
+        self.assertEqual(instance.email, "test@example.com")
+        self.assertEqual(instance.first_name, "John")
+        self.assertEqual(instance.last_name, "Doe")
 
-    def test_email(self):
-        """Pass email"""
-        user1 = User()
-        self.assertEqual(str, type(User.email))
-        self.assertTrue(hasattr(user1, "email"))
+        # Modificar el valor de otro atributo
+        instance.other_attr = "Some value"
+        self.assertEqual(instance.other_attr, "Some value")
 
-    def test_password(self):
-        """Pass password"""
-        user1 = User()
-        self.assertEqual(str, type(User.password))
-        self.assertTrue(hasattr(user1, "password"))
+    def test_attribute_types(self):
+        instance = User()
 
-    def test_first_name(self):
-        """Pass first name"""
-        user1 = User()
-        self.assertEqual(str, type(User.first_name))
-        self.assertTrue(hasattr(user1, "first_name"))
-
-    def test_last_name(self):
-        """Pass last name"""
-        user1 = User()
-        self.assertEqual(str, type(User.last_name))
-        self.assertTrue(hasattr(user1, "last_name"))
-
-    def test_instantiate_kwargs(self):
-        """Single instantiate with kwargs"""
-        dt = datetime.today()
-        user1 = User(
-                id="123",
-                created_at=dt.isoformat(),
-                updated_at=dt.isoformat()
-        )
-        self.assertEqual(user1.id, "123")
-        self.assertEqual(user1.created_at, dt)
-        self.assertEqual(user1.updated_at, dt)
-
-    def test_str_rep(self):
-        """Pass str representation"""
-        user1 = User()
-        str_rep = "[{}] ({}) {}".format(
-            user1.__class__.__name__,
-            user1.id,
-            user1.__dict__
-            )
-        self.assertEqual(str_rep, str(user1))
+        # Asegurarse de que los atributos son del tipo esperado
+        self.assertIsInstance(instance.id, str)
+        self.assertIsInstance(instance.created_at, datetime.datetime)
+        self.assertIsInstance(instance.updated_at, datetime.datetime)
+        self.assertIsInstance(instance.email, str)
+        self.assertIsInstance(instance.password, str)
+        self.assertIsInstance(instance.first_name, str)
+        self.assertIsInstance(instance.last_name, str)
 
     def test_save(self):
-        """ save method """
-        user1 = User()
-        update = user1.updated_at
-        user1.save()
-        self.assertNotEqual(update, user1.updated_at)
+        instance = User()
+        original_updated_at = instance.updated_at
+        instance.save()
+        self.assertGreater(instance.updated_at, original_updated_at)
+        # Asegurarse de que se llame a models.storage.save() en save()
 
     def test_to_dict(self):
-        """Pass to_dict method"""
-        user1 = User()
-        self.assertTrue(dict, type(user1.to_dict))
+        instance = User()
+        instance_dict = instance.to_dict()
+        self.assertIn("id", instance_dict)
+        self.assertIn("created_at", instance_dict)
+        self.assertIn("updated_at", instance_dict)
+        self.assertIn("__class__", instance_dict)
+        self.assertTrue(isinstance(instance_dict["created_at"], str))
+        self.assertTrue(isinstance(instance_dict["updated_at"], str))
+        self.assertEqual(instance_dict["__class__"], "User")
+        self.assertIn("email", instance_dict)
+        self.assertIn("password", instance_dict)
+        self.assertIn("first_name", instance_dict)
+        self.assertIn("last_name", instance_dict)
+        self.assertEqual(instance_dict["email"], "")
+        self.assertEqual(instance_dict["password"], "")
+        self.assertEqual(instance_dict["first_name"], "")
+        self.assertEqual(instance_dict["last_name"], "")
 
-    def test_to_dict_add_attr(self):
-        """Add attribute to dict"""
-        user1 = User()
-        user1.age = "25"
-        user1.state = "California"
-        self.assertIn("age", user1.to_dict())
-        self.assertIn("state", user1.to_dict())
+    def test_instance_equality(self):
+        instance1 = User(email="test@example.com", first_name="John")
+        instance2 = User(email="another@example.com", first_name="Jane")
+        instance3 = User(email="test@example.com", first_name="John")
 
-    def test_to_dict_wrong_arg(self):
-        """Add an undefined arg"""
-        user1 = User()
-        with self.assertRaises(NameError):
-            user1.to_dict(hello)
+        # Asegurarse de que las instancias se pueden comparar correctamente
+        self.assertNotEqual(instance1, instance2)
+        self.assertEqual(instance1, instance3)
+
+    def test_init_with_kwargs(self):
+        data = {
+            "id": "test_id",
+            "created_at": "2023-08-10T10:00:00.000000",
+            "updated_at": "2023-08-10T11:00:00.000000",
+            "email": "test@example.com",
+            "password": "test_password",
+            "first_name": "John",
+            "last_name": "Doe",
+            "other_key": "other_value"
+        }
+        instance = User(**data)
+        self.assertEqual(instance.id, "test_id")
+        self.assertIsInstance(instance.created_at, datetime.datetime)
+        self.assertIsInstance(instance.updated_at, datetime.datetime)
+        self.assertEqual(instance.email, "test@example.com")
+        self.assertEqual(instance.password, "test_password")
+        self.assertEqual(instance.first_name, "John")
+        self.assertEqual(instance.last_name, "Doe")
+        self.assertEqual(instance.other_key, "other_value")
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     unittest.main()

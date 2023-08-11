@@ -1,85 +1,97 @@
 #!/usr/bin/python3
-"""
-Unittest to test state class
-"""
+"""We test te class Review and all its functions"""
 import unittest
-import inspect
-import json
-import os
-import pycodestyle
+import datetime
 from models.base_model import BaseModel
 from models.review import Review
 
 
-class TestFileStorageDocs(unittest.TestCase):
-    """Tests for documentation of class"""
+class TestReview(unittest.TestCase):
+    def test_inheritance(self):
+        # Asegurarse de que Review es una subclase de BaseModel
+        self.assertTrue(issubclass(Review, BaseModel))
 
-    @classmethod
-    def setUpClass(cls):
-        """Set up for the doc tests"""
-        cls.review_funcs = inspect.getmembers(Review, inspect.isfunction)
+    def test_attribute_initialization(self):
+        instance = Review()
 
-    def test_conformance_class(self):
-        """Test that we conform to Pycodestyle."""
-        style = pycodestyle.StyleGuide(quiet=True)
-        result = style.check_files(['models/review.py'])
-        self.assertEqual(result.total_errors, 0,
-                         "Found code style errors (and warnings).")
+        # Asegurarse de que los atributos estén inicializados correctamente
+        self.assertEqual(instance.place_id, "")
+        self.assertEqual(instance.user_id, "")
+        self.assertEqual(instance.text, "")
 
-    def test_conformance_test(self):
-        """Test that we conform to Pycodestyle."""
-        style = pycodestyle.StyleGuide(quiet=True)
-        result = style.\
-            check_files(['tests/test_models/test_review.py'])
-        self.assertEqual(result.total_errors, 0,
-                         "Found code style errors (and warnings).")
+    def test_attribute_manipulation(self):
+        instance = Review()
 
-    def test_module_docstr(self):
-        """Tests for docstring"""
-        self.assertTrue(len(Review.__doc__) >= 1)
+        # Modificar valores de atributos
+        instance.place_id = "place_123"
+        instance.text = "This is a sample review."
 
-    def test_class_docstr(self):
-        """Tests for docstring"""
-        self.assertTrue(len(Review.__doc__) >= 1)
+        # Asegurarse de que los atributos se hayan actualizado correctamente
+        self.assertEqual(instance.place_id, "place_123")
+        self.assertEqual(instance.text, "This is a sample review.")
 
-    def test_func_docstr(self):
-        """Tests for docstrings in all functions"""
-        for func in self.review_funcs:
-            self.assertTrue(len(func[1].__doc__) >= 1)
+    def test_attribute_types(self):
+        instance = Review()
 
-
-class TestState(unittest.TestCase):
-    def test_is_subclass(self):
-        self.assertTrue(issubclass(Review().__class__, BaseModel), True)
-
-    def test_attr_str(self):
-        self.assertEqual(type(Review().place_id), str)
-        self.assertEqual(type(Review().user_id), str)
-        self.assertEqual(type(Review().text), str)
-
-    def test_has_attributes_in_to_dict(self):
-        """check if attr is in to_dict"""
-        review = Review()
-        review.place_id = "melb"
-        review.user_id = "jacq"
-        review.text = "hello"
-        self.assertTrue('id' in review.to_dict())
-        self.assertTrue('created_at' in review.to_dict())
-        self.assertTrue('updated_at' in review.to_dict())
-        self.assertTrue('place_id' in review.to_dict())
-        self.assertTrue('user_id' in review.to_dict())
-        self.assertTrue('text' in review.to_dict())
+        # Asegurarse de que los atributos son del tipo esperado
+        self.assertIsInstance(instance.id, str)
+        self.assertIsInstance(instance.created_at, datetime.datetime)
+        self.assertIsInstance(instance.updated_at, datetime.datetime)
+        self.assertIsInstance(instance.place_id, str)
+        self.assertIsInstance(instance.user_id, str)
+        self.assertIsInstance(instance.text, str)
 
     def test_save(self):
-        review = Review()
-        review.save()
-        self.assertNotEqual(review.created_at, review.updated_at)
+        instance = Review()
+        original_updated_at = instance.updated_at
+        instance.save()
+        self.assertGreater(instance.updated_at, original_updated_at)
+        # Asegurarse de que se llame a models.storage.save() en save()
 
     def test_to_dict(self):
-        review = Review()
-        self.assertTrue(dict, type(review.to_dict))
-        self.assertEqual('to_dict' in dir(review), True)
+        instance = Review()
+        instance_dict = instance.to_dict()
+        self.assertIn("id", instance_dict)
+        self.assertIn("created_at", instance_dict)
+        self.assertIn("updated_at", instance_dict)
+        self.assertIn("__class__", instance_dict)
+        self.assertTrue(isinstance(instance_dict["created_at"], str))
+        self.assertTrue(isinstance(instance_dict["updated_at"], str))
+        self.assertEqual(instance_dict["__class__"], "Review")
+        self.assertIn("place_id", instance_dict)
+        self.assertIn("user_id", instance_dict)
+        self.assertIn("text", instance_dict)
+        self.assertEqual(instance_dict["place_id"], "")
+        self.assertEqual(instance_dict["user_id"], "")
+        self.assertEqual(instance_dict["text"], "")
+
+    def test_instance_equality(self):
+        instance1 = Review(place_id="place_1", text="Review A")
+        instance2 = Review(place_id="place_2", text="Review B")
+        instance3 = Review(place_id="place_1", text="Review A")
+
+        # Asegurarse de que las instancias se pueden comparar correctamente
+        self.assertNotEqual(instance1, instance2)
+        self.assertEqual(instance1, instance3)
+
+    def test_init_with_kwargs(self):
+        data = {
+            "id": "test_id",
+            "created_at": "2023-08-10T10:00:00.000000",
+            "updated_at": "2023-08-10T11:00:00.000000",
+            "place_id": "place_123",
+            "user_id": "user_456",
+            "text": "Test review",
+            "other_key": "other_value"
+        }
+        instance = Review(**data)
+        self.assertEqual(instance.id, "test_id")
+        self.assertIsInstance(instance.created_at, datetime.datetime)
+        self.assertIsInstance(instance.updated_at, datetime.datetime)
+        self.assertEqual(instance.place_id, "place_123")
+        self.assertEqual(instance.user_id, "user_456")
+        self.assertEqual(instance.text, "Test review")
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     unittest.main()

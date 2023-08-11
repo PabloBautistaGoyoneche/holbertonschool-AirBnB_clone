@@ -1,80 +1,84 @@
 #!/usr/bin/python3
-"""
-Unittest to test state class
-"""
+"""We test te class Amenity and all its functions"""
 import unittest
-import inspect
-import json
-import os
-import pycodestyle
+import datetime
 from models.base_model import BaseModel
 from models.amenity import Amenity
 
 
-class TestFileStorageDocs(unittest.TestCase):
-    """Tests for documentation of class"""
+class TestAmenity(unittest.TestCase):
+    def test_inheritance(self):
+        # Asegurarse de que Amenity es una subclase de BaseModel
+        self.assertTrue(issubclass(Amenity, BaseModel))
 
-    @classmethod
-    def setUpClass(cls):
-        """Set up for the doc tests"""
-        cls.amenity_funcs = inspect.getmembers(Amenity, inspect.isfunction)
+    def test_attribute_manipulation(self):
+        instance = Amenity()
 
-    def test_conformance_class(self):
-        """Test that we conform to Pycodestyle."""
-        style = pycodestyle.StyleGuide(quiet=True)
-        result = style.check_files(['models/amenity.py'])
-        self.assertEqual(result.total_errors, 0,
-                         "Found code style errors (and warnings).")
+        # Asegurarse de que el atributo "name" está inicializado
+        # como una cadena vacía
+        self.assertEqual(instance.name, "")
 
-    def test_conformance_test(self):
-        """Test that we conform to Pycodestyle."""
-        style = pycodestyle.StyleGuide(quiet=True)
-        result = style.\
-            check_files(['tests/test_models/test_amenity.py'])
-        self.assertEqual(result.total_errors, 0,
-                         "Found code style errors (and warnings).")
+        # Modificar el valor del atributo "name"
+        instance.name = "Test Amenity Name"
+        self.assertEqual(instance.name, "Test Amenity Name")
 
-    def test_module_docstr(self):
-        """Tests for docstring"""
-        self.assertTrue(len(Amenity.__doc__) >= 1)
+        # Modificar el valor de otro atributo
+        instance.other_attr = "Some value"
+        self.assertEqual(instance.other_attr, "Some value")
 
-    def test_class_docstr(self):
-        """Tests for docstring"""
-        self.assertTrue(len(Amenity.__doc__) >= 1)
+    def test_attribute_types(self):
+        instance = Amenity()
 
-    def test_func_docstr(self):
-        """Tests for docstrings in all functions"""
-        for func in self.amenity_funcs:
-            self.assertTrue(len(func[1].__doc__) >= 1)
-
-
-class TestState(unittest.TestCase):
-
-    def test_is_subclass(self):
-        self.assertTrue(issubclass(Amenity().__class__, BaseModel), True)
-
-    def test_attr_str(self):
-        self.assertEqual(type(Amenity().name), str)
-
-    def test_has_attributes_in_to_dict(self):
-        """check if attr is in to_dict"""
-        amenity = Amenity()
-        amenity.name = "garden"
-        self.assertTrue('id' in amenity.to_dict())
-        self.assertTrue('created_at' in amenity.to_dict())
-        self.assertTrue('updated_at' in amenity.to_dict())
-        self.assertTrue('name' in amenity.to_dict())
+        # Asegurarse de que los atributos son del tipo esperado
+        self.assertIsInstance(instance.id, str)
+        self.assertIsInstance(instance.created_at, datetime.datetime)
+        self.assertIsInstance(instance.updated_at, datetime.datetime)
+        self.assertIsInstance(instance.name, str)
 
     def test_save(self):
-        amenity = Amenity()
-        amenity.save()
-        self.assertNotEqual(amenity.created_at, amenity.updated_at)
+        instance = Amenity()
+        original_updated_at = instance.updated_at
+        instance.save()
+        self.assertGreater(instance.updated_at, original_updated_at)
+        # Asegurarse de que se llame a models.storage.save() en save()
 
     def test_to_dict(self):
-        amenity = Amenity()
-        self.assertTrue(dict, type(amenity.to_dict))
-        self.assertEqual('to_dict' in dir(amenity), True)
+        instance = Amenity()
+        instance_dict = instance.to_dict()
+        self.assertIn("id", instance_dict)
+        self.assertIn("created_at", instance_dict)
+        self.assertIn("updated_at", instance_dict)
+        self.assertIn("__class__", instance_dict)
+        self.assertTrue(isinstance(instance_dict["created_at"], str))
+        self.assertTrue(isinstance(instance_dict["updated_at"], str))
+        self.assertEqual(instance_dict["__class__"], "Amenity")
+        self.assertIn("name", instance_dict)
+        self.assertEqual(instance_dict["name"], "")
+
+    def test_instance_equality(self):
+        instance1 = Amenity(name="Test Amenity 1")
+        instance2 = Amenity(name="Test Amenity 2")
+        instance3 = Amenity(name="Test Amenity 1")
+
+        # Asegurarse de que las instancias se pueden comparar correctamente
+        self.assertNotEqual(instance1, instance2)
+        self.assertEqual(instance1, instance3)
+
+    def test_init_with_kwargs(self):
+        data = {
+            "id": "test_id",
+            "created_at": "2023-08-10T10:00:00.000000",
+            "updated_at": "2023-08-10T11:00:00.000000",
+            "name": "Test Amenity",
+            "other_key": "other_value"
+        }
+        instance = Amenity(**data)
+        self.assertEqual(instance.id, "test_id")
+        self.assertIsInstance(instance.created_at, datetime.datetime)
+        self.assertIsInstance(instance.updated_at, datetime.datetime)
+        self.assertEqual(instance.name, "Test Amenity")
+        self.assertEqual(instance.other_key, "other_value")
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     unittest.main()

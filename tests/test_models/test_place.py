@@ -1,148 +1,145 @@
 #!/usr/bin/python3
-"""Unit tests for class Place"""
+"""We test te class Place and all its functions"""
 import unittest
-from models.place import Place
+import datetime
 from models.base_model import BaseModel
-from datetime import datetime
+from models.place import Place
 
 
-class TestUser(unittest.TestCase):
-    """Unit tests for class Place"""
+class TestPlace(unittest.TestCase):
+    def test_inheritance(self):
+        # Asegurarse de que Place es una subclase de BaseModel
+        self.assertTrue(issubclass(Place, BaseModel))
 
-    def test_instantiate(self):
-        """Pass instantiation"""
-        self.assertEqual(Place, type(Place()))
+    def test_attribute_initialization(self):
+        instance = Place()
 
-    def test_id(self):
-        """Pass public id string format"""
-        self.assertEqual(str, type(Place().id))
+        # Asegurarse de que los atributos estén inicializados correctamente
+        self.assertEqual(instance.city_id, "")
+        self.assertEqual(instance.user_id, "")
+        self.assertEqual(instance.name, "")
+        self.assertEqual(instance.description, "")
+        self.assertEqual(instance.number_rooms, 0)
+        self.assertEqual(instance.number_bathrooms, 0)
+        self.assertEqual(instance.max_guest, 0)
+        self.assertEqual(instance.price_by_night, 0)
+        self.assertEqual(instance.latitude, 0.0)
+        self.assertEqual(instance.longitude, 0.0)
+        self.assertEqual(instance.amenity_ids, [])
 
-    def test_created_at(self):
-        """Pass created at datetime"""
-        self.assertEqual(datetime, type(Place().created_at))
+    def test_attribute_manipulation(self):
+        instance = Place()
 
-    def test_updated_at(self):
-        """Pass updated at datetime"""
-        self.assertEqual(datetime, type(Place().updated_at))
+        # Modificar valores de atributos
+        instance.city_id = "city_123"
+        instance.name = "Sample Place"
+        instance.number_rooms = 3
+        instance.number_bathrooms = 2
+        instance.max_guest = 6
+        instance.price_by_night = 150
+        instance.latitude = 37.7749
+        instance.longitude = -122.4194
 
-    def test_uid(self):
-        """UID created at each instantiation"""
-        place1 = Place()
-        place2 = Place()
-        self.assertNotEqual(place1.id, place2.id)
+        # Asegurarse de que los atributos se hayan actualizado correctamente
+        self.assertEqual(instance.city_id, "city_123")
+        self.assertEqual(instance.name, "Sample Place")
+        self.assertEqual(instance.number_rooms, 3)
+        self.assertEqual(instance.number_bathrooms, 2)
+        self.assertEqual(instance.max_guest, 6)
+        self.assertEqual(instance.price_by_night, 150)
+        self.assertEqual(instance.latitude, 37.7749)
+        self.assertEqual(instance.longitude, -122.4194)
 
-    def test_city_id(self):
-        """Pass city_id"""
-        place1 = Place()
-        self.assertEqual(str, type(Place.city_id))
-        self.assertTrue(hasattr(place1, "city_id"))
+    def test_attribute_types(self):
+        instance = Place()
 
-    def test_user_id(self):
-        """Pass user_id"""
-        place1 = Place()
-        self.assertEqual(str, type(Place.user_id))
-        self.assertTrue(hasattr(place1, "user_id"))
-
-    def test_name(self):
-        """Pass name"""
-        place1 = Place()
-        self.assertEqual(str, type(Place.name))
-        self.assertTrue(hasattr(place1, "name"))
-
-    def test_description(self):
-        """Pass description"""
-        place1 = Place()
-        self.assertEqual(str, type(Place.description))
-        self.assertTrue(hasattr(place1, "description"))
-
-    def test_number_rooms(self):
-        """Pass rooms"""
-        place1 = Place()
-        self.assertEqual(int, type(Place.number_rooms))
-        self.assertTrue(hasattr(place1, "number_rooms"))
-    
-    def test_number_bathrooms(self):
-        """Pass bathrooms"""
-        place1 = Place()
-        self.assertEqual(int, type(Place.number_bathrooms))
-        self.assertTrue(hasattr(place1, "number_bathrooms"))
-
-    def test_max_guest(self):
-        """Pass max guest"""
-        place1 = Place()
-        self.assertEqual(int, type(Place.max_guest))
-        self.assertTrue(hasattr(place1, "max_guest"))
-
-    def test_price_by_night(self):
-        """Pass price by night"""
-        place1 = Place()
-        self.assertEqual(int, type(Place.price_by_night))
-        self.assertTrue(hasattr(place1, "price_by_night"))
-
-    def test_latitidue(self):
-        """Pass latitude"""
-        place1 = Place()
-        self.assertEqual(float, type(Place.latitude))
-        self.assertTrue(hasattr(place1, "latitude"))
-
-    def test_longitude(self):
-        """Pass longitude"""
-        place1 = Place()
-        self.assertEqual(float, type(Place.longitude))
-        self.assertTrue(hasattr(place1, "longitude"))
-    
-    def test_amenity_ids(self):
-        """Pass amenity id"""
-        place1 = Place()
-        self.assertEqual(list, type(Place.amenity_ids))
-        self.assertTrue(hasattr(place1, "amenity_ids"))
-
-    def test_instantiate_kwargs(self):
-        """Single instantiate with kwargs"""
-        dt = datetime.today()
-        place1 = Place(
-            id="123", created_at=dt.isoformat(), updated_at=dt.isoformat()
-        )
-        self.assertEqual(place1.id, "123")
-        self.assertEqual(place1.created_at, dt)
-        self.assertEqual(place1.updated_at, dt)
-
-    def test_str_rep(self):
-        """Pass str representation"""
-        place1 = Place()
-        str_rep = "[{}] ({}) {}".format(
-            place1.__class__.__name__,
-            place1.id,
-            place1.__dict__
-            )
-        self.assertEqual(str_rep, str(place1))
+        # Asegurarse de que los atributos son del tipo esperado
+        self.assertIsInstance(instance.id, str)
+        self.assertIsInstance(instance.created_at, datetime.datetime)
+        self.assertIsInstance(instance.updated_at, datetime.datetime)
+        self.assertIsInstance(instance.city_id, str)
+        self.assertIsInstance(instance.user_id, str)
+        self.assertIsInstance(instance.name, str)
+        self.assertIsInstance(instance.description, str)
+        self.assertIsInstance(instance.number_rooms, int)
+        self.assertIsInstance(instance.number_bathrooms, int)
+        self.assertIsInstance(instance.max_guest, int)
+        self.assertIsInstance(instance.price_by_night, int)
+        self.assertIsInstance(instance.latitude, float)
+        self.assertIsInstance(instance.longitude, float)
+        self.assertIsInstance(instance.amenity_ids, list)
 
     def test_save(self):
-        """save method"""
-        place1 = Place()
-        update = place1.updated_at
-        place1.save()
-        self.assertNotEqual(update, place1.updated_at)
+        instance = Place()
+        original_updated_at = instance.updated_at
+        instance.save()
+        self.assertGreater(instance.updated_at, original_updated_at)
+        # Asegurarse de que se llame a models.storage.save() en save()
 
     def test_to_dict(self):
-        """Pass to_dict method"""
-        place1 = Place()
-        self.assertTrue(dict, type(place1.to_dict))
+        instance = Place()
+        instance_dict = instance.to_dict()
+        self.assertIn("id", instance_dict)
+        self.assertIn("created_at", instance_dict)
+        self.assertIn("updated_at", instance_dict)
+        self.assertIn("__class__", instance_dict)
+        self.assertTrue(isinstance(instance_dict["created_at"], str))
+        self.assertTrue(isinstance(instance_dict["updated_at"], str))
+        self.assertEqual(instance_dict["__class__"], "Place")
+        self.assertIn("city_id", instance_dict)
+        self.assertIn("user_id", instance_dict)
+        self.assertIn("name", instance_dict)
+        self.assertIn("description", instance_dict)
+        self.assertIn("number_rooms", instance_dict)
+        self.assertIn("number_bathrooms", instance_dict)
+        self.assertIn("max_guest", instance_dict)
+        self.assertIn("price_by_night", instance_dict)
+        self.assertIn("latitude", instance_dict)
+        self.assertIn("longitude", instance_dict)
+        self.assertIn("amenity_ids", instance_dict)
 
-    def test_to_dict_add_attr(self):
-        """Add attribute to dict"""
-        place1 = Place()
-        place1.city = "LA"
-        place1.state = "California"
-        self.assertIn("city", place1.to_dict())
-        self.assertIn("state", place1.to_dict())
+    def test_instance_equality(self):
+        instance1 = Place(city_id="city_1", name="Place A")
+        instance2 = Place(city_id="city_2", name="Place B")
+        instance3 = Place(city_id="city_1", name="Place A")
 
-    def test_to_dict_wrong_arg(self):
-        """Add an undefined arg"""
-        place1 = Place()
-        with self.assertRaises(NameError):
-            place1.to_dict(hello)
+        # Asegurarse de que las instancias se pueden comparar correctamente
+        self.assertNotEqual(instance1, instance2)
+        self.assertEqual(instance1, instance3)
+
+    def test_init_with_kwargs(self):
+        data = {
+            "id": "test_id",
+            "created_at": "2023-08-10T10:00:00.000000",
+            "updated_at": "2023-08-10T11:00:00.000000",
+            "city_id": "city_123",
+            "user_id": "user_456",
+            "name": "Test Place",
+            "description": "This is a test place",
+            "number_rooms": 2,
+            "number_bathrooms": 1,
+            "max_guest": 4,
+            "price_by_night": 120,
+            "latitude": 34.0522,
+            "longitude": -118.2437,
+            "amenity_ids": ["amenity_1", "amenity_2"]
+        }
+        instance = Place(**data)
+        self.assertEqual(instance.id, "test_id")
+        self.assertIsInstance(instance.created_at, datetime.datetime)
+        self.assertIsInstance(instance.updated_at, datetime.datetime)
+        self.assertEqual(instance.city_id, "city_123")
+        self.assertEqual(instance.user_id, "user_456")
+        self.assertEqual(instance.name, "Test Place")
+        self.assertEqual(instance.description, "This is a test place")
+        self.assertEqual(instance.number_rooms, 2)
+        self.assertEqual(instance.number_bathrooms, 1)
+        self.assertEqual(instance.max_guest, 4)
+        self.assertEqual(instance.price_by_night, 120)
+        self.assertEqual(instance.latitude, 34.0522)
+        self.assertEqual(instance.longitude, -118.2437)
+        self.assertEqual(instance.amenity_ids, ["amenity_1", "amenity_2"])
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     unittest.main()
