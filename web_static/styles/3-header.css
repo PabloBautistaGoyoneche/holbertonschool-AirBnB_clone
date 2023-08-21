@@ -1,10 +1,13 @@
 header {
+    position: fixed;
+    top: 0;
     border-bottom: 1px solid #CCCCCC;
     padding-left: 20px;
-    background-color: #FFFFFF;
     background: url(../images/logo.png) left center;
     background-repeat: no-repeat;
     background-origin: content-box;
-    height: 70px;
+    background-color: #FFFFFF;
+    height: 60px;
     width: 100%;
+    z-index: 100;
 }
